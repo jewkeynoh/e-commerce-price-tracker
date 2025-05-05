@@ -1,0 +1,50 @@
+# Configuration for the Price Tracker
+
+# -- Scraping Settings --
+# Be polite! Use a delay between requests to avoid hammering servers.
+# Identify your bot with a user agent (mimic a browser). Find yours at whatsmyuseragent.com
+user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" # Palitan mo ng actual user agent mo
+request_delay_seconds: 15 # Delay between checking each product URL (Increase if needed)
+
+# -- Scheduling Settings --
+# How often to check all products (in minutes)
+schedule_interval_minutes: 60 # Check every hour
+
+# -- Products to Track --
+# IMPORTANT: You MUST find the correct CSS Selectors for EACH product page.
+# Use browser DevTools (Right-click -> Inspect) to find a unique selector for the price element.
+# This part WILL BREAK if the website layout changes.
+products:
+  - name: "Sample Product 1 (e.g., Lazada Item)" # Descriptive name
+    url: "https://www.lazada.com.ph/products/sample-product-page-url-1.html" # PALITAN ITO!
+    target_price: 1500.00 # Alert if price drops below this
+    # --- PALITAN MO ITONG SELECTOR ---
+    # Example selector (Inspect element to find the real one):
+    price_selector: ".pdp-price_size_xl" # Example only! Find the real one.
+    # Optional: Selector to get product name from page for confirmation
+    name_selector: ".pdp-mod-product-badge-title" # Example only!
+
+  - name: "Sample Product 2 (e.g., Shopee Item)"
+    url: "https://shopee.ph/Sample-Product-Name-i.12345.67890" # PALITAN ITO!
+    target_price: 800.00
+    # --- PALITAN MO ITONG SELECTOR ---
+    # Example selector (Inspect element to find the real one):
+    price_selector: "._3e_U_V" # Example Shopee price class (changes often!)
+    name_selector: ".WBVL_7" # Example Shopee name class (changes often!)
+
+# Add more products following the same structure
+
+# -- Alert Settings --
+alert_settings:
+  enabled: True # Set to False to disable all email alerts
+  # Sender email can be set here or loaded from .env (EMAIL_SENDER)
+  # sender_email: "your_email@gmail.com" # Optional override
+  recipient_email: "your_alert_recipient@example.com" # PALITAN ITO! Kung kanino isesend
+  # GMAIL_APP_PASSWORD loaded from .env
+
+# -- Logging --
+log_file: "logs/price_tracker.log"
+log_level: "INFO" # DEBUG, INFO, WARNING, ERROR
+
+# -- Database --
+database_file: "data/product_prices.db"

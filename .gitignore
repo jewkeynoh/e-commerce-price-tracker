@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+*.venv
+env/
+ENV/
+
+# Configuration secrets
+.env
+
+# Logs
+logs/*.log
+*.log
+
+# Data files
+data/*.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files (examples)
+.vscode/
+.idea/
+*.swp
+*.swo

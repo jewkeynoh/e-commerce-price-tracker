@@ -1,0 +1,6 @@
+requests
+beautifulsoup4
+lxml # Often a faster parser for BeautifulSoup
+schedule
+PyYAML # For reading config.yaml
+python-dotenv # For reading .env file
