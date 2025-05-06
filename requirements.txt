@@ -1,6 +1,8 @@
 requests
 beautifulsoup4
-lxml # Often a faster parser for BeautifulSoup
+lxml
 schedule
-PyYAML # For reading config.yaml
-python-dotenv # For reading .env file
+PyYAML
+python-dotenv
+selenium
+webdriver-manager
