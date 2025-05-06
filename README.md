@@ -1,161 +1,141 @@
-# 🛒 Python E-commerce Price Tracker
+# 🛒 Python E-commerce Price Tracker (Selenium Version)
 
-## Overview
-
-This Python-based tool monitors prices of specified products on e-commerce websites. It periodically scrapes product pages, extracts current prices, compares them to your target and previously recorded prices, and sends email alerts when a price drop is detected.
-
-Designed for robustness and reliability, the tool includes:
-
-* Configuration management via YAML
-* Persistent storage using SQLite
-* Error handling and logging
-* Polite scraping (User-Agent headers, request delays)
-
-> ⚠️ **Disclaimer**: Web scraping is sensitive to site structure changes and may break unexpectedly. Always respect `robots.txt`, terms of service, and scrape responsibly. Excessive scraping may lead to IP bans.
+[![Python Version](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## ✨ Features
+## 📘 Overview
 
-* **Configurable Product List**: Define products (URL, target price, CSS selectors) via `config.yaml`
-* **Accurate Price Parsing**: Extracts prices using CSS selectors
-* **Smart Price Drop Detection**: Alerts only if the price is below your target *and* lower than the last known price
-* **Persistent Price History**: Stores last known prices in `SQLite` at `data/product_prices.db`
-* **Email Notifications**: Alerts you via Gmail SMTP (App Password required)
-* **Scheduled Price Checks**: Uses `schedule` to run at intervals (configurable)
-* **Polite and Resilient Scraping**: Includes User-Agent customization, delays, and error handling
-* **Secure Credentials**: Stores sensitive info in a `.env` file
-* **Detailed Logging**: Tracks events and errors in `logs/price_tracker.log`
-* **Modular Code**: Clean separation of config, scraping, alerting, and tracking logic
+This project tracks product prices on dynamic e-commerce websites using **Selenium** to automate browser rendering, which is crucial for JavaScript-heavy sites. It parses prices with **BeautifulSoup**, logs them into an **SQLite** database, and sends **email alerts** via Gmail when price drops occur.
 
----
+> ⚠️ **Note**: Scraping JavaScript content requires Selenium. Sites needing login, CAPTCHA verification, or employing bot detection may block scraping attempts. Use responsibly and ethically.
+
+## ✅ Features
+
+* **Selenium-Powered Scraping**: Handles JavaScript-rendered pages.
+* **Custom Configurations**: Define products, selectors, user agent, and price targets in `config.yaml`.
+* **Price Monitoring**: Detects price drops below a target and previous price.
+* **Email Alerts**: Notifies via Gmail with App Password authentication.
+* **SQLite Storage**: Persists price history in `data/product_prices.db`.
+* **Logging**: Logs activity and issues in `logs/price_tracker.log`.
+* **Scheduling**: Uses `schedule` for automated periodic checks.
+* **Modular Architecture**: Clean separation of scraping, tracking, and alerting.
+* **Secure Credentials**: `.env` file for sensitive data.
 
 ## 📁 Project Structure
 
 ```
 price_tracker/
-├── venv/                     # Python virtual environment
+├── venv/                  # Virtual environment
 ├── logs/
-│   └── price_tracker.log     # Log output
+│   └── price_tracker.log  # Application logs
 ├── data/
-│   └── product_prices.db     # SQLite database
-├── .gitignore
-├── config.yaml               # Main configuration file
-├── alert_utils.py            # Email alert logic
-├── scraper.py                # HTML scraping utilities
-├── tracker.py                # Main runner with scheduling
-├── requirements.txt
-├── .env.example              # Template for sensitive info
-├── .env                      # Actual secrets (**DO NOT COMMIT**)
-└── README.md                 # This file
+│   └── product_prices.db  # SQLite database
+├── .gitignore             # Ignores .env, venv/, logs/, data/, etc.
+├── config.yaml            # Product config (URLs, CSS selectors, etc.)
+├── alert_utils.py         # Email functions
+├── scraper.py             # Selenium-based scraper
+├── tracker.py             # Main execution logic
+├── requirements.txt       # Python package dependencies
+├── .env.example           # Template for credentials
+├── .env                   # Actual credentials (excluded from Git)
+└── README.md              # This file
 ```
-
----
 
 ## ⚙️ Prerequisites
 
-* **Python** 3.6+
+* **Python 3.6+**
+* **Google Chrome Browser** (updated)
 * **pip** (Python package manager)
+* **Git** (optional, for version control)
 
----
-
-## 🛠️ Setup and Configuration
+## 🚀 Setup Instructions
 
 1. **Clone the Repository**
 
-   ```bash
-   git clone https://github.com/yourname/price-tracker.git
-   cd price-tracker
-   ```
+```bash
+git clone <repo-url>
+cd price_tracker
+```
 
-2. **Create and Activate Virtual Environment**
+2. **Create & Activate Virtual Environment**
 
-   ```bash
-   python -m venv venv
-   # Windows (Git Bash):
-   source venv/Scripts/activate
-   # macOS/Linux:
-   # source venv/bin/activate
-   # Windows CMD:
-   # .\venv\Scripts\activate.bat
-   ```
+```bash
+python -m venv venv
+
+# Activate (choose your OS shell):
+source venv/Scripts/activate       # Windows Git Bash/MINGW64
+source venv/bin/activate           # Linux/macOS
+.\venv\Scripts\activate.bat       # Windows CMD
+.\venv\Scripts\Activate.ps1       # Windows PowerShell
+```
 
 3. **Install Dependencies**
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-4. **Configure `.env` for Credentials**
+4. **Configure Credentials**
 
-   * Copy `.env.example` to `.env`
-   * Add your Gmail App Password
-   * Optional: Add your email as `EMAIL_SENDER`
+```bash
+cp .env.example .env
+# Edit .env with your Gmail App Password & sender email
+```
+
+> 🔒 `.env` is already in `.gitignore` to avoid leaking secrets.
 
 5. **Edit `config.yaml`**
 
-   * Add your product URLs, `target_price`, and CSS `price_selector`
-   * Optionally add `name_selector`
-   * Update the `user_agent` string (find yours at [whatsmyuseragent.com](https://www.whatsmyuseragent.com/))
-   * Adjust:
-
-     * `request_delay_seconds` (≥10–15s recommended)
-     * `schedule_interval_minutes`
-     * `alert_settings` (enable alerts, set `recipient_email`)
-
----
+* Replace sample product URLs.
+* Set your `target_price`.
+* Update `price_selector` and `name_selector` using browser DevTools (`document.querySelector(...)`).
+* Adjust `selenium_wait_time`, `user_agent`, `schedule_interval_minutes`, and email `alert_settings`.
 
 ## ▶️ Usage
 
-1. **Activate Environment**
+```bash
+source venv/Scripts/activate  # Activate environment (choose your OS)
+python tracker.py             # Start tracking loop
+```
 
-   ```bash
-   source venv/Scripts/activate  # or the appropriate command
-   ```
+* Runs an initial check, then follows the configured interval.
+* Operates headlessly unless modified (see below).
+* Logs output to both console and `logs/price_tracker.log`.
 
-2. **Run the Tracker**
+## 🛠 Troubleshooting
 
-   ```bash
-   python tracker.py
-   ```
-
-* The script checks all products once, then runs periodically based on your config.
-* Watch the terminal or `logs/price_tracker.log` for activity.
-* Press `Ctrl+C` to stop the process gracefully.
-
----
-
-## 🔍 Finding CSS Selectors (Mini Guide)
-
-1. Open the product page in Chrome/Firefox.
-
-2. Right-click the price → **Inspect**.
-
-3. Look for an element with class/id near the price:
-
-   ```html
-   <span class="price-tag pdp-price_size_xl" id="price_display_id">₱1,999.00</span>
-   ```
-
-4. Create a selector:
-
-   * By ID: `#price_display_id`
-   * By class: `.price-tag.pdp-price_size_xl`
-   * By tag + class: `span.pdp-price_size_xl`
-
-5. Test in browser console:
-
-   ```js
-   document.querySelector('#your_selector')
-   ```
-
-6. Paste the working selector in `config.yaml` under `price_selector`.
-   Do the same for `name_selector` if desired.
-
-> ⚠️ **Note**: CSS selectors often break when site layouts change.
+| Problem                    | Solution                                                                                                        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **TimeoutException**       | Selector may be incorrect or wait time too short. Verify in DevTools and increase `selenium_wait_time`.         |
+| **Non-headless Debugging** | Comment out `--headless` in `scraper.py` to observe browser behavior.                                           |
+| **Blocked by Site**        | Login pages, CAPTCHAs, or errors = site is blocking Selenium. Remove the URL from config.                       |
+| **WebDriver Errors**       | Ensure Chrome is updated. Let `webdriver-manager` auto-install. Alternatively, download and configure manually. |
+| **Email Not Sending**      | Check `.env` values and log output. Ensure Gmail 2FA is enabled and correct App Password is used.               |
+| **Price or Name is None**  | Check and refine selectors in `config.yaml` using browser DevTools.                                             |
 
 ---
 
-## 🪖 License
+## 🧪 Future Improvements
 
-This project is licensed under the [MIT License](LICENSE).
+* Support for alternative email providers (e.g., SendGrid, SMTP relay)
+* Captcha detection and optional alerting
+* Multi-threaded scraping for faster processing
+* Docker support for deployment
+
+## 📜 License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+---
+
+## 🙏 Contributing
+
+Feel free to fork, open issues, or submit PRs to enhance functionality, improve reliability, or expand compatibility with more sites.
+
+---
+
+Happy tracking! 📉💸
+
+---
